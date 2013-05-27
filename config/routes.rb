@@ -1,4 +1,7 @@
 Bookclub::Application.routes.draw do
+  resources :books
+
+
   resources :users
   controller :sessions do
     get 'login' => :new
