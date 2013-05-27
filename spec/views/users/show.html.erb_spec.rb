@@ -8,10 +8,10 @@ describe "users/show" do
     ))
   end
 
-  it "renders attributes in <p>" do
+  it "renders attributes in <p> (but not theirs password digests)" do
     render
     # Run the generator again with the --webrat flag if you want to use webrat matchers
     rendered.should match(/Username/)
-    rendered.should match(/Password Digest/)
+    rendered.should_not match(/Password Digest/)
   end
 end
