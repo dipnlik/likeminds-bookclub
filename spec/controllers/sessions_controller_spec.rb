@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe SessionsController do
+  it "should not receive authentication check" do
+    controller.should_not_receive(:check_authentication)
+    get :new
+  end
 
   describe "GET 'new'" do
     it "returns http success" do

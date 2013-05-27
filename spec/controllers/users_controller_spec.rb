@@ -19,6 +19,10 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe UsersController do
+  it "should receive authentication check" do
+    controller.should_receive(:check_authentication)
+    get :index
+  end
 
   # This should return the minimal set of attributes required to create a valid
   # User. As you add validations to User, be sure to
@@ -28,7 +32,7 @@ describe UsersController do
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # UsersController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:valid_session) { { user_id: 1 } }
 
   describe "GET index" do
     it "assigns all users as @users" do
@@ -75,9 +79,10 @@ describe UsersController do
         assigns(:user).should be_persisted
       end
 
-      it "redirects to the created user" do
+      it "logs the user in and redirects to the created user" do
         post :create, {:user => valid_attributes}, valid_session
         response.should redirect_to(User.last)
+        session[:user_id].should eq(User.last.id)
       end
     end
 
