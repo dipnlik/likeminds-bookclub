@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   skip_before_filter :check_authentication, only: [:new, :create]
+  before_filter :logged_user_cannot_edit_other_users, only: [:edit, :update, :destroy]
   
   # GET /users
   # GET /users.json
@@ -82,5 +83,11 @@ class UsersController < ApplicationController
       format.html { redirect_to users_url }
       format.json { head :no_content }
     end
+  end
+  
+  private
+  
+  def logged_user_cannot_edit_other_users
+    redirect_to user_path(params[:id]) if params[:id].to_i != session[:user_id]
   end
 end

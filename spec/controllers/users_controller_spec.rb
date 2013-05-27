@@ -58,6 +58,12 @@ describe UsersController do
   end
 
   describe "GET edit" do
+    it "for wrong user, silently redirect" do
+      user = User.create! valid_attributes
+      get :edit, {:id => -1024}, valid_session
+      response.should redirect_to user_path(-1024)
+    end
+    
     it "assigns the requested user as @user" do
       user = User.create! valid_attributes
       get :edit, {:id => user.to_param}, valid_session
@@ -104,6 +110,14 @@ describe UsersController do
   end
 
   describe "PUT update" do
+    describe "for wrong user" do
+      it "silently redirect" do
+        user = User.create! valid_attributes
+        put :update, {:id => -1024}, valid_session
+        response.should redirect_to user_path(-1024)
+      end
+    end
+    
     describe "with valid params" do
       it "updates the requested user" do
         user = User.create! valid_attributes
@@ -148,6 +162,12 @@ describe UsersController do
   end
 
   describe "DELETE destroy" do
+    it "for wrong user, silently redirect" do
+      user = User.create! valid_attributes
+      delete :destroy, {:id => -1024}, valid_session
+      response.should redirect_to user_path(-1024)
+    end
+    
     it "destroys the requested user" do
       user = User.create! valid_attributes
       expect {
