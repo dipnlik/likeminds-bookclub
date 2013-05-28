@@ -13,6 +13,8 @@ group :assets do
 end
 
 group :development, :test do
+  gem 'awesome_print'
+  gem 'hirb'
   gem 'rspec-rails'
   gem 'sqlite3'
 end
