@@ -4,4 +4,7 @@ class Rating < ActiveRecord::Base
   validates :book_id, presence: true, uniqueness: {scope: :user_id}
   validates :user_id, presence: true
   validates :value, inclusion: (0..5)
+  
+  belongs_to :book
+  belongs_to :user
 end

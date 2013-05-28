@@ -17,4 +17,16 @@ describe Rating do
     Rating.new.should have(:no).error_on(:value)
     Rating.new.value.should eq(0)
   end
+  
+  it "belongs to book" do
+    Rating.new.should respond_to(:book)
+    book = Book.create(title: 'Book', isbn: '0123456789')
+    Rating.last.book.should eq(book)
+  end
+  
+  it "belongs to user" do
+    Rating.new.should respond_to(:user)
+    user = User.create(username: 'user', password: 'pass', password_confirmation: 'pass')
+    Rating.last.user.should eq(user)
+  end
 end
