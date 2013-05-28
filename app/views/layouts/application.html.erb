@@ -7,8 +7,10 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-
-<%= yield %>
-
+  <h1>
+    <%= link_to 'Bookclub', root_url %>
+    <%= login_header %>
+  </h1>
+  <%= yield %>
 </body>
 </html>
