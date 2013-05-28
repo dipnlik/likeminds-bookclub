@@ -1,13 +1,12 @@
 Bookclub::Application.routes.draw do
   resources :books
-
-
   resources :users
   controller :sessions do
     get 'login' => :new
     post 'login' => :create
     delete 'logout' => :destroy
   end
+  root to: 'books#index'
 
 
   # The priority is based upon order of creation:

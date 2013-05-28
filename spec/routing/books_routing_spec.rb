@@ -5,6 +5,7 @@ describe BooksController do
 
     it "routes to #index" do
       get("/books").should route_to("books#index")
+      get("/").should route_to("books#index")
     end
 
     it "routes to #new" do
