@@ -48,6 +48,12 @@ describe BooksController do
       get :show, {:id => book.to_param}, valid_session
       assigns(:book).should eq(book)
     end
+    
+    it "assigns the book's current user rating as @user_rating" do
+      book = Book.create! valid_attributes
+      get :show, {:id => book.to_param}, valid_session
+      assigns(:user_rating).should eq(book.rating_by_user_id(valid_session[:user_id]))
+    end
   end
 
   describe "GET new" do
@@ -63,6 +69,12 @@ describe BooksController do
       get :edit, {:id => book.to_param}, valid_session
       assigns(:book).should eq(book)
     end
+    
+    it "assigns the book's current user rating as @user_rating" do
+      book = Book.create! valid_attributes
+      get :edit, {:id => book.to_param}, valid_session
+      assigns(:user_rating).should eq(book.rating_by_user_id(session[:user_id]))
+    end
   end
 
   describe "POST create" do
@@ -71,6 +83,13 @@ describe BooksController do
         expect {
           post :create, {:book => valid_attributes}, valid_session
         }.to change(Book, :count).by(1)
+      end
+
+      it "creates a new rating for that user and book" do
+        expect {
+          post :create, {book: valid_attributes, rating: 0.0}, valid_session
+        }.to change(Rating, :count).by(1)
+        Rating.last.user_id.should eq(1)
       end
 
       it "assigns a newly created book as @book" do
@@ -114,10 +133,23 @@ describe BooksController do
         put :update, {:id => book.to_param, :book => { "title" => "MyString" }}, valid_session
       end
 
+      it "updates the user's rating for that book" do
+        book = Book.create! valid_attributes
+        rating = Rating.create! user_id: valid_session[:user_id], book_id: book.id
+        Rating.any_instance.should_receive(:update_attributes).with({value: "3.5"})
+        put :update, {id: book.to_param, book: { "title" => "MyString" }, rating: "3.5"}, valid_session
+      end
+
       it "assigns the requested book as @book" do
         book = Book.create! valid_attributes
         put :update, {:id => book.to_param, :book => valid_attributes}, valid_session
         assigns(:book).should eq(book)
+      end
+
+      it "assigns the book's current user rating as @user_rating" do
+        book = Book.create! valid_attributes
+        put :update, {id: book.to_param, book: valid_attributes, rating: "1.5"}, valid_session
+        assigns(:user_rating).should eq(book.rating_by_user_id(valid_session[:user_id]))
       end
 
       it "redirects to the book" do
@@ -134,6 +166,15 @@ describe BooksController do
         Book.any_instance.stub(:save).and_return(false)
         put :update, {:id => book.to_param, :book => { "title" => "invalid value" }}, valid_session
         assigns(:book).should eq(book)
+      end
+
+      it "updates the book's current user rating and assigns it as @user_rating" do
+        book = Book.create! valid_attributes
+        Rating.create! user_id: valid_session[:user_id], book_id: book.id, value: 3.0
+        # Trigger the behavior that occurs when invalid params are submitted
+        Book.any_instance.stub(:save).and_return(false)
+        put :update, {id: book.to_param, book: { "title" => "invalid value" }, rating: "4.5"}, valid_session
+        assigns(:user_rating).should eq(4.5)
       end
 
       it "re-renders the 'edit' template" do

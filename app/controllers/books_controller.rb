@@ -14,6 +14,7 @@ class BooksController < ApplicationController
   # GET /books/1.json
   def show
     @book = Book.find(params[:id])
+    @user_rating = @book.rating_by_user_id(session[:user_id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -35,6 +36,7 @@ class BooksController < ApplicationController
   # GET /books/1/edit
   def edit
     @book = Book.find(params[:id])
+    @user_rating = @book.rating_by_user_id(session[:user_id])
   end
 
   # POST /books
@@ -44,6 +46,8 @@ class BooksController < ApplicationController
 
     respond_to do |format|
       if @book.save
+        Rating.create(user_id: session[:user_id], book_id: @book.id, value: params[:rating])
+        
         format.html { redirect_to @book, notice: 'Book was successfully created.' }
         format.json { render json: @book, status: :created, location: @book }
       else
@@ -57,6 +61,9 @@ class BooksController < ApplicationController
   # PUT /books/1.json
   def update
     @book = Book.find(params[:id])
+    rating = @book.ratings.find_by_user_id(session[:user_id])
+    rating.update_attributes({ value: params[:rating] }) unless rating.nil?
+    @user_rating = @book.rating_by_user_id(session[:user_id])
 
     respond_to do |format|
       if @book.update_attributes(params[:book])
