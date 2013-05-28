@@ -28,9 +28,16 @@ describe Book do
     Book.last.users.should eq([user])
   end
   
-  it "#rating_by_user_id returns the rating value for that user id" do
-    user = User.create(username: 'user', password: 'pass', password_confirmation: 'pass')
-    Rating.create(book_id: Book.last.id, user_id: user.id, value: 2.5)
-    Book.last.rating_by_user_id(user.id).should eq(2.5)
+  describe "#rating_by_user_id" do
+    it "should return the rating value for that user id" do
+      user = User.create(username: 'user', password: 'pass', password_confirmation: 'pass')
+      Rating.create(book_id: Book.last.id, user_id: user.id, value: 2.5)
+      Book.last.rating_by_user_id(user.id).should eq(2.5)
+    end
+    
+    it "should return nil if the user didn't rate this book" do
+      user = User.create(username: 'user', password: 'pass', password_confirmation: 'pass')
+      Book.last.rating_by_user_id(user.id).should be_nil
+    end
   end
 end

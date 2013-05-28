@@ -7,6 +7,7 @@ class Book < ActiveRecord::Base
   has_many :users, through: :ratings
   
   def rating_by_user_id(user_id)
-    self.ratings.find_by_user_id(user_id).value
+    rating = self.ratings.find_by_user_id(user_id)
+    rating ? rating.value : nil
   end
 end
