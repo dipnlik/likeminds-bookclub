@@ -5,4 +5,8 @@ class Book < ActiveRecord::Base
   
   has_many :ratings
   has_many :users, through: :ratings
+  
+  def rating_by_user_id(user_id)
+    self.ratings.find_by_user_id(user_id).value
+  end
 end

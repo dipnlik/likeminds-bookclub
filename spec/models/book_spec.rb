@@ -27,4 +27,10 @@ describe Book do
     Rating.create(book_id: 1, user_id: 1)
     Book.last.users.should eq([user])
   end
+  
+  it "#rating_by_user_id returns the rating value for that user id" do
+    user = User.create(username: 'user', password: 'pass', password_confirmation: 'pass')
+    Rating.create(book_id: Book.last.id, user_id: user.id, value: 2.5)
+    Book.last.rating_by_user_id(user.id).should eq(2.5)
+  end
 end
