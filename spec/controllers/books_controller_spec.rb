@@ -28,7 +28,11 @@ describe BooksController do
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # BooksController. Be sure to keep this updated too.
-  let(:valid_session) { {} }
+  let(:valid_session) { { user_id: 1 } }
+
+  before(:each) do
+    User.create!(username: 'user', password: 'pass', password_confirmation: 'pass')
+  end
 
   describe "GET index" do
     it "assigns all books as @books" do
