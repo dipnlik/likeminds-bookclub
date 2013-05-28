@@ -19,6 +19,10 @@
     <%= f.label :isbn %><br />
     <%= f.text_field :isbn %>
   </div>
+  <div class="field">
+    <%= label_tag :rating, 'My rating' %><br />
+    <%= rating_select_tag :rating, value: @user_rating %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>
