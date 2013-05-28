@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
     user = User.find_by_username params[:username]
     if user && user.authenticate(params[:password])
       session[:user_id] = user.id
-      redirect_to user_path(user)
+      redirect_to books_path
     else
       redirect_to login_path, alert: 'Username/password mismatch!'
     end

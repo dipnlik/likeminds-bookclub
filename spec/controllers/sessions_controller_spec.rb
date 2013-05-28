@@ -21,7 +21,7 @@ describe SessionsController do
     it "with correct credentials, should log user in" do
       post :create, username: 'user', password: 'pass'
       session[:user_id].should eq(@user.id)
-      response.should redirect_to user_url(@user)
+      response.should redirect_to books_url
     end
     
     it "with wrong credentials, should not log in and warn the user" do
