@@ -35,8 +35,9 @@ describe UsersController do
   let(:valid_session) { { user_id: 1 } }
 
   describe "GET index" do
-    it "assigns all users as @users" do
+    it "assigns the current users page as @users" do
       user = User.create! valid_attributes
+      User.stub_chain(:order, :page).and_return([user])
       get :index, {}, valid_session
       assigns(:users).should eq([user])
     end

@@ -35,8 +35,9 @@ describe BooksController do
   end
 
   describe "GET index" do
-    it "assigns all books as @books" do
+    it "assigns the current book page as @books" do
       book = Book.create! valid_attributes
+      Book.stub_chain(:order, :page).and_return([book])
       get :index, {}, valid_session
       assigns(:books).should eq([book])
     end
