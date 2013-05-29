@@ -40,4 +40,15 @@ describe Book do
       Book.last.rating_by_user_id(user.id).should be_nil
     end
   end
+  
+  describe "#all_ratings" do
+    it "should return a string with all usernames and ratings" do
+      user1 = User.create(username: 'user1', password: 'pass', password_confirmation: 'pass')
+      user2 = User.create(username: 'user2', password: 'pass', password_confirmation: 'pass')
+      book = Book.last
+      Rating.create(user_id: user2.id, book_id: book.id, value: 3.0)
+      Rating.create(user_id: user1.id, book_id: book.id, value: 2.0)
+      book.all_ratings.should eq('user1 (2.0), user2 (3.0)')
+    end
+  end
 end

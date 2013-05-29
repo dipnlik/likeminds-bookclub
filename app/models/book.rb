@@ -10,4 +10,10 @@ class Book < ActiveRecord::Base
     rating = self.ratings.find_by_user_id(user_id)
     rating ? rating.value : nil
   end
+  
+  def all_ratings
+    self.ratings.includes([:user, :book]).order('users.username').collect{ |r|
+      "#{r.user.username} (#{r.value})"
+    }.join(', ')
+  end
 end
