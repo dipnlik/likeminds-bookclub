@@ -4,6 +4,7 @@ gem 'rails', '3.2.13'
 gem 'jquery-rails'
 
 gem 'bcrypt-ruby', '~> 3.0.0'
+gem 'kaminari'
 gem 'thin'
 
 group :assets do
