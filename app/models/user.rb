@@ -6,4 +6,10 @@ class User < ActiveRecord::Base
   
   has_many :ratings
   has_many :books, through: :ratings
+  
+  @@ADMIN_USERNAMES = %w(dipnlik).freeze
+  
+  def admin?
+    @@ADMIN_USERNAMES.include? self.username.downcase
+  end
 end

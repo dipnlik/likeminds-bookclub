@@ -18,4 +18,14 @@ describe User do
     User.new(password: '123', password_confirmation: '456').should have(1).errors_on(:password)
     User.new(password: '123', password_confirmation: '123').should have(:no).errors_on(:password)
   end
+  
+  it "#admin? determines if an user is in the administrators list or not" do
+    class User
+      @@ADMIN_USERNAMES = %w(alfa beta).freeze
+    end
+    User.new(username: 'alfa').should be_an_admin
+    User.new(username: 'Beta').should be_an_admin
+    User.new(username: 'gama').should_not be_an_admin
+    User.new(username: 'admin').should_not be_an_admin
+  end
 end
