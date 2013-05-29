@@ -14,7 +14,7 @@ class BooksController < ApplicationController
   # GET /books/1.json
   def show
     @book = Book.find(params[:id])
-    @user_rating = @book.rating_by_user_id(session[:user_id])
+    @all_ratings = @book.all_ratings
 
     respond_to do |format|
       format.html # show.html.erb

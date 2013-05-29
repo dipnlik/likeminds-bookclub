@@ -49,10 +49,14 @@ describe BooksController do
       assigns(:book).should eq(book)
     end
     
-    it "assigns the book's current user rating as @user_rating" do
+    it "assigns all ratings for current book as @all_ratings" do
       book = Book.create! valid_attributes
+      user1 = User.create(username: 'user1', password: 'pass', password_confirmation: 'pass')
+      user2 = User.create(username: 'user2', password: 'pass', password_confirmation: 'pass')
+      Rating.create(user_id: user1.id, book_id: book.id, value: 2.0)
+      Rating.create(user_id: user2.id, book_id: book.id, value: 3.0)
       get :show, {:id => book.to_param}, valid_session
-      assigns(:user_rating).should eq(book.rating_by_user_id(valid_session[:user_id]))
+      assigns(:all_ratings).should eq("user1 (2.0), user2 (3.0)")
     end
   end
 
