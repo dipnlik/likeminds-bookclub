@@ -14,4 +14,14 @@ describe "users/show" do
     rendered.should match(/Username/)
     rendered.should_not match(/Password Digest/)
   end
+  
+  it "render a list of books this user rated" do
+    book = stub_model(Book, id: -1, title: 'Moby Dick')
+    @user.stub_chain(:ratings, :includes).and_return([stub_model(Rating, book: book, value: 4.0)])
+    render
+    assert_select "li" do
+      assert_select "a[href=?]", "/books/-1", text: 'Moby Dick'
+    end
+    rendered.should match "\(4\.0\)"
+  end
 end

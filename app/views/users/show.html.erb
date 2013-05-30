@@ -5,5 +5,17 @@
   <%= @user.username %>
 </p>
 
+<p>
+  <b>Ratings:</b>
+  <ul>
+    <% @user.ratings.includes(:book).each do |rating| %>
+      <li>
+        <%= link_to rating.book.title, rating.book %>
+        (<%= rating.value %>)
+      </li>
+    <% end %>
+  </ul>
+</p>
+
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Back', users_path %>
