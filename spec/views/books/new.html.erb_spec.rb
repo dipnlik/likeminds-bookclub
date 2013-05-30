@@ -6,6 +6,7 @@ describe "books/new" do
       :title => "MyString",
       :isbn => "MyString"
     ).as_new_record)
+    assign(:current_user, stub_model(User, username: 'user'))
   end
 
   it "renders new book form" do
@@ -20,6 +21,20 @@ describe "books/new" do
           assert_select "option[value=?]", value.to_f
         end
       end
+    end
+  end
+  
+  describe "the 'other ratings' block" do
+    it "should not render for common users" do
+      assign(:current_user, stub_model(User, username: 'user', admin?: false))
+      render
+      assert_select 'div#other_ratings', count: 0
+    end
+    
+    it "should not render for admin users" do
+      assign(:current_user, stub_model(User, username: 'user', admin?: true))
+      render
+      assert_select 'div#other_ratings', count: 0
     end
   end
 end

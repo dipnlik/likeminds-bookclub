@@ -138,6 +138,16 @@ describe BooksController do
         put :update, {:id => book.to_param, :book => { "title" => "MyString" }}, valid_session
       end
 
+      it "if logged in as admin, updates all ratings" do
+        book = Book.create! valid_attributes
+        Rating.create(book_id: book.id, user_id: 1, value: 1)
+        User.stub(:find).and_return(stub_model(User, admin?: true))
+        put :update, {id: book.to_param, book: { title: "MyString" }, ratings: [
+          {id: 1, value: 4.0}, {id: 2, value: 5.0}
+        ]}, valid_session
+        Rating.last.value.should eq(4.0)
+      end
+
       it "updates the user's rating for that book" do
         book = Book.create! valid_attributes
         rating = Rating.create! user_id: valid_session[:user_id], book_id: book.id

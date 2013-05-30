@@ -23,6 +23,21 @@
     <%= label_tag :rating, 'My rating' %><br />
     <%= rating_select_tag :rating, value: @user_rating %>
   </div>
+  <% if current_user.admin? && !@book.ratings.empty? %>
+  <div class="field" id="other_ratings">
+    Other ratings<br />
+    <ul>
+      <% @book.ratings.each do |rating| %>
+        <% next if rating.user == current_user %>
+        <li>
+          <%= hidden_field_tag "ratings[][id]", rating.id %>
+          <%= label_tag "ratings[][value]", rating.user.username %>
+          <%= rating_select_tag "ratings[][value]", value: rating.value %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  <% end %>
   <div class="actions">
     <%= f.submit %>
   </div>

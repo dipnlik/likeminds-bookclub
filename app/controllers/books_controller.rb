@@ -63,6 +63,14 @@ class BooksController < ApplicationController
     @book = Book.find(params[:id])
     rating = @book.ratings.find_by_user_id(session[:user_id])
     rating.update_attributes({ value: params[:rating] }) unless rating.nil?
+    
+    if current_user.admin?
+      params[:ratings].each do |rating|
+        r = Rating.find_by_id(rating[:id])
+        r.update_attributes(rating) unless r.nil?
+      end
+    end
+    
     @user_rating = @book.rating_by_user_id(session[:user_id])
 
     respond_to do |format|
